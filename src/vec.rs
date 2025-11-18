@@ -4,9 +4,6 @@ use core::ops::RangeBounds;
 use core::{fmt, ptr};
 use core::{marker::PhantomData, ops::Deref, ptr::NonNull};
 
-#[cfg(test)]
-mod tests;
-
 pub struct Vec<C: Counter<usize>, T> {
     inner: Inner<C, [T]>,
     ptr: NonNull<[T]>,
