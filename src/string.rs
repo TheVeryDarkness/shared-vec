@@ -14,9 +14,7 @@ impl<C: Counter<usize>> String<C> {
     /// Create a new empty `String`.
     #[inline]
     pub fn new() -> Self {
-        Self {
-            vec: Vec::new(),
-        }
+        Self { vec: Vec::new() }
     }
 
     /// Create a `String` from a `Box<[u8]>`
@@ -38,7 +36,6 @@ impl<C: Counter<usize>> Default for String<C> {
         Self::new()
     }
 }
-
 
 impl<C: Counter<usize>> Clone for String<C> {
     #[inline]
