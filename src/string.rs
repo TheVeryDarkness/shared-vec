@@ -29,6 +29,20 @@ impl<C: Counter<usize>> String<C> {
             vec: Vec::from_boxed_slice(bytes),
         })
     }
+
+    /// Create a `String` from a `Box<[u8]>` without checking for UTF-8 validity.
+    #[inline]
+    pub unsafe fn from_utf8_unchecked(bytes: Box<[u8]>) -> Self {
+        Self {
+            vec: Vec::from_boxed_slice(bytes),
+        }
+    }
+
+    /// Create a `String` from a `Box<str>`
+    #[inline]
+    pub fn from_str(bytes: Box<str>) -> Self {
+        unsafe { Self::from_utf8_unchecked(bytes.into_boxed_bytes()) }
+    }
 }
 
 impl<C: Counter<usize>> Default for String<C> {
