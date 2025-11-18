@@ -32,6 +32,23 @@ fn arc_vec() {
 }
 
 fn test_string<C: Counter<usize>>() {
+    assert_eq!(String::<C>::new().len(), 0);
+    assert_eq!(String::<C>::new().as_str(), "");
+    assert_eq!(String::<C>::new(), String::<C>::default());
+    assert_eq!(String::<C>::new(), String::<C>::from_str("".into()));
+    assert_eq!(
+        String::<C>::new(),
+        String::<C>::from_utf8(b"".to_vec().into_boxed_slice()).unwrap()
+    );
+
+    assert_eq!(
+        String::<C>::from_str("hello 🦀!".into()),
+        String::<C>::from_utf8("hello 🦀!".as_bytes().to_vec().into_boxed_slice()).unwrap()
+    );
+    assert_eq!(String::<C>::from_str("hello 🦀!".into()), unsafe {
+        String::<C>::from_utf8_unchecked("hello 🦀!".as_bytes().to_vec().into_boxed_slice())
+    });
+
     let s = String::<C>::from_str("hello 🦀!".to_owned().into_boxed_str());
     assert_eq!(s.len(), 11);
     assert_eq!(s.as_str(), "hello 🦀!");
@@ -40,13 +57,22 @@ fn test_string<C: Counter<usize>>() {
     assert_eq!(s2.len(), 11);
     assert_eq!(s2.as_str(), "hello 🦀!");
 
-    let s3 = s.get(6..10).unwrap();
-    assert_eq!(s3.len(), 4);
-    assert_eq!(s3.as_str(), "🦀");
+    macro_rules! test_idx {
+        ($bounds:expr, $string:literal) => {
+            let s3 = s.idx($bounds);
+            assert_eq!(s3.len(), $string.len());
+            assert_eq!(s3.as_str(), $string);
+        };
+    }
 
-    let s4 = s.idx(0..5);
-    assert_eq!(s4.len(), 5);
-    assert_eq!(s4.as_str(), "hello");
+    test_idx!(..5, "hello");
+    test_idx!(..11, "hello 🦀!");
+    test_idx!(..=10, "hello 🦀!");
+    test_idx!(..=9, "hello 🦀");
+    test_idx!(.., "hello 🦀!");
+    test_idx!(6..10, "🦀");
+    test_idx!(6.., "🦀!");
+    test_idx!(6..=10, "🦀!");
 }
 
 #[test]

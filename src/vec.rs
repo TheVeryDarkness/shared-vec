@@ -212,3 +212,48 @@ impl<C: Counter<usize>, T> Vec<C, T> {
         self.slice(start, len)
     }
 }
+
+impl<C: Counter<usize>, T> From<Box<[T]>> for Vec<C, T> {
+    #[inline]
+    fn from(data: Box<[T]>) -> Self {
+        Self::from_boxed_slice(data)
+    }
+}
+
+impl<C: Counter<usize>, T> PartialEq for Vec<C, T>
+where
+    T: PartialEq,
+{
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        self.as_slice() == other.as_slice()
+    }
+}
+impl<C: Counter<usize>, T> Eq for Vec<C, T> where T: Eq {}
+impl<C: Counter<usize>, T> PartialOrd for Vec<C, T>
+where
+    T: PartialOrd,
+{
+    #[inline]
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+        self.as_slice().partial_cmp(other.as_slice())
+    }
+}
+impl<C: Counter<usize>, T> Ord for Vec<C, T>
+where
+    T: Ord,
+{
+    #[inline]
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+        self.as_slice().cmp(other.as_slice())
+    }
+}
+impl<C: Counter<usize>, T> core::hash::Hash for Vec<C, T>
+where
+    T: core::hash::Hash,
+{
+    #[inline]
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+        self.as_slice().hash(state);
+    }
+}
