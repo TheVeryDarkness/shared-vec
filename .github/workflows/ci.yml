@@ -19,7 +19,7 @@ jobs:
           - rust: stable # Run code coverage only on stable
             components: rustfmt, clippy, llvm-tools-preview
           - rust: nightly # Run MIRI tests only on nightly
-            components: rustfmt, clippy, miri
+            components: rustfmt, clippy, miri, rust-src
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust Toolchain
