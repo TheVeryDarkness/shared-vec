@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - rust: 1.56.0
+          - rust: 1.87.0
           - rust: stable # Run code coverage only on stable
           - rust: nightly # Run MIRI tests only on nightly
     steps:
