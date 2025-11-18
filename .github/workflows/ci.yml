@@ -1,0 +1,51 @@
+on:
+  push:
+    branches:
+      - "*" # Run benchmarks on all branches.
+  schedule:
+    - cron: "0 0 10 * 0" # Run tests the 10th day of every month at midnight.
+
+name: Build, Lint and Test
+
+jobs:
+  check:
+    name: Check and Test Coverage
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - rust: 1.56.0
+          - rust: stable # Run code coverage only on stable
+          - rust: nightly # Run MIRI tests only on nightly
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: llvm-tools-preview, rustfmt, clippy
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+        if: matrix.rust == 'stable'
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+      - name: cargo clippy
+        run: cargo clippy --workspace --all-targets
+      - name: cargo test
+        run: cargo test --workspace
+      - name: cargo test
+        run: cargo miri test --workspace
+        if: matrix.rust == 'nightly'
+      - name: Generate Code Coverage
+        run: cargo llvm-cov --workspace --lcov --output-path lcov.info
+        if: matrix.rust == 'stable'
+      - name: Upload Results to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: lcov.info
+          flags: unittests
+          name: shared-vec
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+        if: matrix.rust == 'stable'
