@@ -9,8 +9,7 @@ const CHARSET: &str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 fn test_string<C: Counter<usize>>() {
     let mut strings = iter::repeat_with(|| generate_rng(0..1024, CHARSET))
         .take(1024)
-        .into_iter()
-        .map(|s| shared_vec::String::<C>::from_str(s.into_boxed_str()))
+        .map(|s| shared_vec::String::<C>::from_boxed_str(s.into_boxed_str()))
         .collect::<Vec<shared_vec::String<C>>>();
 
     strings.sort_by(|a, b| a.as_str().cmp(b.as_str()));

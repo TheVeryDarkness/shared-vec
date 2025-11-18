@@ -32,6 +32,10 @@ impl<C: Counter<usize>> String<C> {
     }
 
     /// Create a `String` from a `Box<[u8]>` without checking for UTF-8 validity.
+    ///
+    /// # Safety
+    ///
+    /// The caller must ensure that the bytes are valid UTF-8.
     #[inline]
     pub unsafe fn from_utf8_unchecked(bytes: Box<[u8]>) -> Self {
         Self {
@@ -41,7 +45,7 @@ impl<C: Counter<usize>> String<C> {
 
     /// Create a `String` from a `Box<str>`
     #[inline]
-    pub fn from_str(bytes: Box<str>) -> Self {
+    pub fn from_boxed_str(bytes: Box<str>) -> Self {
         unsafe { Self::from_utf8_unchecked(bytes.into_boxed_bytes()) }
     }
 }
@@ -172,7 +176,7 @@ impl<C: Counter<usize>> String<C> {
 impl<C: Counter<usize>> From<Box<str>> for String<C> {
     #[inline]
     fn from(s: Box<str>) -> Self {
-        Self::from_str(s)
+        Self::from_boxed_str(s)
     }
 }
 
@@ -184,7 +188,7 @@ impl<C: Counter<usize>> PartialEq for String<C> {
 impl<C: Counter<usize>> Eq for String<C> {}
 impl<C: Counter<usize>> PartialOrd for String<C> {
     fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
-        self.vec.partial_cmp(&other.vec)
+        Some(self.cmp(other))
     }
 }
 impl<C: Counter<usize>> Ord for String<C> {

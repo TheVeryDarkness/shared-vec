@@ -6,11 +6,12 @@ use std::hash::RandomState;
 use std::ops::Bound;
 use std::sync::atomic::AtomicUsize;
 
+#[expect(clippy::reversed_empty_ranges)]
 fn test_vec<C: Counter<usize>>() {
     assert_eq!(Vec::<C, u8>::new().len(), 0);
     assert_eq!(Vec::<C, u8>::default().len(), 0);
 
-    let vec = vec![1, 2, 3, 4, 5];
+    let vec = [1, 2, 3, 4, 5];
 
     let v = Vec::<C, _>::from_boxed_slice(Box::new([1, 2, 3, 4, 5]));
     assert_eq!(v.len(), 5);
@@ -89,11 +90,12 @@ fn arc_vec() {
     test_vec::<AtomicUsize>();
 }
 
+#[expect(clippy::reversed_empty_ranges)]
 fn test_string<C: Counter<usize>>() {
     assert_eq!(String::<C>::new().len(), 0);
     assert_eq!(String::<C>::new().as_str(), "");
     assert_eq!(String::<C>::new(), String::<C>::default());
-    assert_eq!(String::<C>::new(), String::<C>::from_str("".into()));
+    assert_eq!(String::<C>::new(), String::<C>::from_boxed_str("".into()));
     assert_eq!(
         String::<C>::new(),
         String::<C>::from_utf8(b"".to_vec().into_boxed_slice()).unwrap()
@@ -102,23 +104,23 @@ fn test_string<C: Counter<usize>>() {
     let string = "hello 🦀!".to_owned();
 
     assert_eq!(
-        String::<C>::from_str("hello 🦀!".into()),
+        String::<C>::from_boxed_str("hello 🦀!".into()),
         String::<C>::from_utf8("hello 🦀!".as_bytes().to_vec().into_boxed_slice()).unwrap()
     );
-    assert_eq!(String::<C>::from_str("hello 🦀!".into()), unsafe {
+    assert_eq!(String::<C>::from_boxed_str("hello 🦀!".into()), unsafe {
         String::<C>::from_utf8_unchecked("hello 🦀!".as_bytes().to_vec().into_boxed_slice())
     });
-    assert_eq!(String::<C>::from_str("hello 🦀!".into()), unsafe {
+    assert_eq!(String::<C>::from_boxed_str("hello 🦀!".into()), unsafe {
         String::<C>::from_utf8_unchecked("hello 🦀!".as_bytes().to_vec().into())
     });
     assert_eq!(
-        String::<C>::from_str("hello 🦀!".into()),
+        String::<C>::from_boxed_str("hello 🦀!".into()),
         String::<C>::from("hello 🦀!".to_owned().into_boxed_str())
     );
 
     assert!(String::<C>::from_utf8(b"\xFF".to_vec().into_boxed_slice()).is_err());
 
-    let s = String::<C>::from_str("hello 🦀!".to_owned().into_boxed_str());
+    let s = String::<C>::from_boxed_str("hello 🦀!".to_owned().into_boxed_str());
     assert_eq!(s.len(), 11);
     assert_eq!(s.as_str(), "hello 🦀!");
 
@@ -170,6 +172,7 @@ fn test_string<C: Counter<usize>>() {
         };
     }
 
+    idx_err!(4..2);
     idx_err!(6..9);
     idx_err!(..12);
     idx_err!(12..);
@@ -189,7 +192,7 @@ fn test_string<C: Counter<usize>>() {
     ];
     let strings = strings
         .iter()
-        .map(|s| String::<C>::from_str((*s).to_owned().into_boxed_str()))
+        .map(|s| String::<C>::from_boxed_str((*s).to_owned().into_boxed_str()))
         .collect::<std::vec::Vec<String<C>>>();
     for s in strings.iter() {
         assert!(strings.binary_search(s).is_ok());

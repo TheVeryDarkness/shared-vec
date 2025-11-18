@@ -37,7 +37,13 @@ mod tests {
             ref_count: NonNull::new(ptr::from_ref(&cell).cast_mut()).unwrap(),
             data: NonNull::new(ptr::from_ref(&data).cast_mut()).unwrap(),
         };
+
+        #[expect(clippy::clone_on_copy)]
         let inner2 = inner.clone();
+        assert_eq!(inner.ref_count, inner2.ref_count);
+        assert_eq!(inner.data, inner2.data);
+
+        let inner2 = inner;
         assert_eq!(inner.ref_count, inner2.ref_count);
         assert_eq!(inner.data, inner2.data);
     }
