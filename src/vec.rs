@@ -168,7 +168,7 @@ impl<C: Counter<usize>, T> Vec<C, T> {
     }
 
     pub(crate) unsafe fn slice(&self, start: usize, len: usize) -> Self {
-        let ptr: *mut T = self.inner.data.as_ptr().cast();
+        let ptr: *mut T = self.ptr.as_ptr() as *mut T;
         let ptr = unsafe { ptr.add(start) };
         let ptr = ptr::slice_from_raw_parts_mut(ptr, len);
         let ptr = unsafe { NonNull::new_unchecked(ptr) };
