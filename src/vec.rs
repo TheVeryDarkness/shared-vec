@@ -133,6 +133,12 @@ impl<C: Counter<usize>, T> Vec<C, T> {
         self
     }
 
+    /// Returns the original slice.
+    #[inline]
+    pub fn as_original_slice(&self) -> &[T] {
+        unsafe { self.inner.data.as_ref() }
+    }
+
     /// Return the start and length of the range without checking.
     #[inline]
     pub(crate) fn convert_range_unchecked(&self, range: impl RangeBounds<usize>) -> (usize, usize) {

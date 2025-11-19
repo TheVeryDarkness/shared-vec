@@ -44,12 +44,14 @@ fn test_vec<C: Counter<usize>>() {
     for i in 0..v.len() {
         assert_eq!(s, v.idx(i..));
         s = s.idx(1..);
+        assert_eq!(s.as_original_slice(), vec.as_slice());
     }
 
     let mut s = v.clone();
     for i in (0..v.len()).rev() {
         assert_eq!(s, v.idx(..(i + 1)));
         s = s.idx(..i);
+        assert_eq!(s.as_original_slice(), vec.as_slice());
     }
 
     macro_rules! idx_ok {
@@ -173,6 +175,7 @@ fn test_string<C: Counter<usize>>() {
             assert_eq!(s3.len(), $string.len());
             assert_eq!(s3.is_empty(), $string.is_empty());
             assert_eq!(s3.as_str(), $string);
+            assert_eq!(s3.as_original_str(), string);
             assert_eq!(s3.to_string(), $string);
             assert_eq!(s3.bytes(), $string.as_bytes());
             assert_eq!(format!("{s3:?}"), format!("{:?}", $string));
@@ -183,6 +186,7 @@ fn test_string<C: Counter<usize>>() {
             assert_eq!(s4.len(), $string.len());
             assert_eq!(s4.is_empty(), $string.is_empty());
             assert_eq!(s4.as_str(), $string);
+            assert_eq!(s4.as_original_str(), string);
             assert_eq!(s4.to_string(), $string);
             assert_eq!(s4.bytes(), $string.as_bytes());
             assert_eq!(format!("{s4:?}"), format!("{:?}", $string));

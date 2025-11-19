@@ -114,6 +114,12 @@ impl<C: Counter<usize>> String<C> {
         self
     }
 
+    /// Returns the original string slice.
+    #[inline]
+    pub fn as_original_str(&self) -> &str {
+        unsafe { str::from_utf8_unchecked(self.vec.as_original_slice()) }
+    }
+
     /// Return the start and length of the range without checking.
     #[inline]
     pub(crate) fn convert_range_unchecked(&self, range: impl RangeBounds<usize>) -> (usize, usize) {
