@@ -254,3 +254,10 @@ where
         self.as_slice().hash(state);
     }
 }
+
+impl<C: Counter<usize>, T> AsRef<[T]> for Vec<C, T> {
+    #[inline]
+    fn as_ref(&self) -> &[T] {
+        self
+    }
+}

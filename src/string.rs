@@ -201,3 +201,23 @@ impl<C: Counter<usize>> Hash for String<C> {
         self.vec.hash(state);
     }
 }
+
+impl<C: Counter<usize>> AsRef<str> for String<C> {
+    #[inline]
+    fn as_ref(&self) -> &str {
+        self
+    }
+}
+
+impl<C: Counter<usize>> AsRef<[u8]> for String<C> {
+    #[inline]
+    fn as_ref(&self) -> &[u8] {
+        &self.vec
+    }
+}
+
+impl<C: Counter<usize>> fmt::Display for String<C> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        <str as fmt::Display>::fmt(self, f)
+    }
+}
