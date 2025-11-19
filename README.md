@@ -39,7 +39,7 @@ println!("{}", &string[..]);
 let slice = vec.idx(1..3);
 println!("{:?}", slice);
 assert_eq!(slice.as_slice(), &[2, 3]);
-let str_slice = &string[7..12];
-println!("{}", str_slice);
-assert_eq!(str_slice, "world");
+let str_slice = string.idx(7..12);
+println!("{:?}", str_slice);
+assert_eq!(str_slice.as_str(), "world");
 ```
