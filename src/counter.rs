@@ -14,9 +14,27 @@ use core::{
 ///
 /// The implementation must hold arithmetic invariants and respect synchronization.
 pub unsafe trait Counter<T>: Sized {
+    /// Increment the counter by 1.
+    ///
+    /// # Safety
+    ///
+    /// The caller must ensure that the counter will not overflow.
     unsafe fn increment(&self);
+    /// Decrement the counter by 1.
+    ///
+    /// # Returns
+    ///
+    /// `true` if the counter reaches zero.
+    ///
+    /// # Safety
+    ///
+    /// The caller must ensure that the counter will not underflow.
+    ///
+    /// [`Counter::fence_acquire`] must be called after this if it returns `true`.
     unsafe fn decrement(&self) -> bool;
+    /// Issue an acquire fence.
     fn fence_acquire();
+    /// Create a counter with initial value of one.
     fn one() -> Self;
 }
 

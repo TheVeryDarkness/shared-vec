@@ -1,3 +1,5 @@
+//! Randomized tests for [`shared_vec`] crate
+
 use itertools::Itertools;
 use shared_vec::Counter;
 use std::cell::Cell;

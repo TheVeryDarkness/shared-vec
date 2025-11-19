@@ -4,8 +4,21 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.87.0"
 description = "Efficient shared container types"
+repository = "https://github.com/TheVeryDarkness/shared-vec.git"
+license = "MIT OR Apache-2.0"
+categories = ["data-structures", "no-std"]
 
 [dependencies]
 
 [dev-dependencies]
 itertools = "0.14.0"
+
+[lints.rust]
+missing_docs = "warn"
+missing_debug_implementations = "warn"
+missing_copy_implementations = "warn"
+unreachable_pub = "warn"
+
+[lints.rustdoc]
+invalid_html_tags = "warn"
+missing_crate_level_docs = "warn"

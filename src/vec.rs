@@ -4,6 +4,12 @@ use core::ops::RangeBounds;
 use core::{fmt, ptr};
 use core::{marker::PhantomData, ops::Deref, ptr::NonNull};
 
+/// An immutable reference-counted vector type.
+///
+/// You can borrow slices of the vector without using a life-time-bound reference,
+/// and clone the vector to create new references to the same data.
+///
+/// You can use [`crate::RcVec`] or [`crate::ArcVec`] as type aliases for common counter types.
 pub struct Vec<C: Counter<usize>, T> {
     inner: Inner<C, [T]>,
     ptr: NonNull<[T]>,
@@ -33,6 +39,7 @@ impl<C: Counter<usize>, T> Vec<C, T> {
         }
     }
 
+    /// Create a `Vec` from a `Box<[T]>`.
     #[inline]
     pub fn from_boxed_slice(data: Box<[T]>) -> Self {
         let x: Inner<C, [T]> = Inner {
@@ -41,6 +48,7 @@ impl<C: Counter<usize>, T> Vec<C, T> {
         };
         unsafe { Self::from_inner(x) }
     }
+    /// Create a new empty `Vec`.
     #[inline]
     pub fn new() -> Self {
         let x: Inner<C, [T]> = Inner {

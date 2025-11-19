@@ -7,6 +7,15 @@ use core::{
     str::Utf8Error,
 };
 
+/// An immutable reference-counted string type.
+///
+/// You can borrow slices of the string without using a life-time-bound reference,
+/// and clone the string to create new references to the same data.
+///
+/// You can use [`RcString`] or [`ArcString`] as type aliases for common counter types.
+///
+/// [`RcString`]: crate::RcString
+/// [`ArcString`]: crate::ArcString
 pub struct String<C: Counter<usize>> {
     vec: Vec<C, u8>,
 }

@@ -1,3 +1,5 @@
+//! Basic tests for [`shared_vec`] crate
+
 use shared_vec::{Counter, String, Vec};
 use std::borrow::ToOwned;
 use std::cell::Cell;

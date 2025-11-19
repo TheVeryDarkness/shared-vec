@@ -1,3 +1,5 @@
+//! Basic synchronization tests for [`shared_vec`] crate
+
 use shared_vec::ArcVec;
 use std::thread::scope;
 
