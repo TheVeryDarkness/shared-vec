@@ -78,6 +78,26 @@ fn test_vec<C: Counter<usize>>() {
 
     let integers: [&[i32]; 3] = [&[0, 1], &[3], &[6, 7, 8]];
     assert!(integers.is_sorted());
+
+    let integers = integers
+        .iter()
+        .map(|s| Vec::<C, i32>::from_boxed_slice(s.to_vec().into_boxed_slice()))
+        .collect::<std::vec::Vec<Vec<C, i32>>>();
+    for s in integers.iter() {
+        assert!(integers.binary_search(s).is_ok());
+    }
+    assert!(integers.is_sorted());
+
+    let integers = Vec::<C, i32>::from_boxed_slice(Box::new([5, 3, 1, 4, 2]));
+    let slices = [
+        integers.idx(2..=2),
+        integers.idx(2..),
+        integers.idx(4..),
+        integers.idx(1..),
+        integers.idx(0..2),
+        integers.idx(0..),
+    ];
+    assert!(slices.is_sorted());
 }
 
 #[test]
