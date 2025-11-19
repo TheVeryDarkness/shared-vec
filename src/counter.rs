@@ -14,8 +14,8 @@ use core::{
 ///
 /// The implementation must hold arithmetic invariants and respect synchronization.
 pub unsafe trait Counter<T>: Sized {
-    fn increment(&self);
-    fn decrement(&self) -> bool;
+    unsafe fn increment(&self);
+    unsafe fn decrement(&self) -> bool;
     fn fence_acquire();
     fn one() -> Self;
 }
@@ -23,11 +23,11 @@ pub unsafe trait Counter<T>: Sized {
 macro_rules! impl_cell {
     ($ty:ty) => {
         unsafe impl Counter<$ty> for Cell<$ty> {
-            fn increment(&self) {
+            unsafe fn increment(&self) {
                 self.set(self.get() + 1);
             }
 
-            fn decrement(&self) -> bool {
+            unsafe fn decrement(&self) -> bool {
                 let new = self.get() - 1;
                 self.set(new);
                 new == 0
@@ -51,11 +51,11 @@ impl_cell!(usize);
 macro_rules! impl_atomic {
     ($ty:ty, $equiv:ty) => {
         unsafe impl Counter<usize> for $ty {
-            fn increment(&self) {
+            unsafe fn increment(&self) {
                 self.fetch_add(1, Ordering::Relaxed);
             }
 
-            fn decrement(&self) -> bool {
+            unsafe fn decrement(&self) -> bool {
                 let old = self.fetch_sub(1, Ordering::Release);
                 debug_assert!(old != 0);
                 old == 1
