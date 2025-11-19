@@ -38,7 +38,19 @@ fn test_vec<C: Counter<usize>>() {
         assert_eq!(v.idx(i..i + 1).as_slice(), &[v.as_slice()[i]]);
     }
 
-    macro_rules! test_ok {
+    let mut s = v.clone();
+    for i in 0..v.len() {
+        assert_eq!(s, v.idx(i..));
+        s = s.idx(1..);
+    }
+
+    let mut s = v.clone();
+    for i in (0..v.len()).rev() {
+        assert_eq!(s, v.idx(..(i + 1)));
+        s = s.idx(..i);
+    }
+
+    macro_rules! idx_ok {
         ($bounds:expr, $slice:expr) => {
             let bounds = $bounds;
             let slice = $slice;
@@ -46,20 +58,21 @@ fn test_vec<C: Counter<usize>>() {
             assert_eq!(v3.len(), slice.len());
             assert_eq!(&*v3, slice);
             assert_eq!(v3.as_slice(), &vec[bounds.clone()]);
+            assert_eq!(<_ as AsRef<[_]>>::as_ref(&v3), &vec[bounds.clone()]);
 
             assert!(v.is_valid_range(bounds.clone()));
             assert_eq!(v3, unsafe { v.get_unchecked(bounds) });
         };
     }
 
-    test_ok!(0..0, &[]);
-    test_ok!(2..2, &[]);
-    test_ok!(5..5, &[]);
-    test_ok!((Bound::Excluded(1), Bound::Included(1)), &[]);
-    test_ok!(..3, &[1, 2, 3]);
-    test_ok!(2.., &[3, 4, 5]);
-    test_ok!(1..4, &[2, 3, 4]);
-    test_ok!(1..=3, &[2, 3, 4]);
+    idx_ok!(0..0, &[]);
+    idx_ok!(2..2, &[]);
+    idx_ok!(5..5, &[]);
+    idx_ok!((Bound::Excluded(1), Bound::Included(1)), &[]);
+    idx_ok!(..3, &[1, 2, 3]);
+    idx_ok!(2.., &[3, 4, 5]);
+    idx_ok!(1..4, &[2, 3, 4]);
+    idx_ok!(1..=3, &[2, 3, 4]);
 
     macro_rules! idx_err {
         ($bounds:expr) => {
@@ -152,10 +165,13 @@ fn test_string<C: Counter<usize>>() {
         ($bounds:expr, $string:literal) => {
             let bounds = $bounds;
             let s3 = s.idx(bounds.clone());
-            assert_eq!(s3.as_str(), &string[bounds]);
+            assert_eq!(s3.as_str(), &string[bounds.clone()]);
+            assert_eq!(<_ as AsRef<str>>::as_ref(&s3), &string[bounds.clone()]);
+            assert_eq!(<_ as AsRef<[u8]>>::as_ref(&s3), string[bounds].as_bytes());
             assert_eq!(s3.len(), $string.len());
             assert_eq!(s3.is_empty(), $string.is_empty());
             assert_eq!(s3.as_str(), $string);
+            assert_eq!(s3.to_string(), $string);
             assert_eq!(s3.bytes(), $string.as_bytes());
             assert_eq!(format!("{s3:?}"), format!("{:?}", $string));
 
@@ -165,6 +181,7 @@ fn test_string<C: Counter<usize>>() {
             assert_eq!(s4.len(), $string.len());
             assert_eq!(s4.is_empty(), $string.is_empty());
             assert_eq!(s4.as_str(), $string);
+            assert_eq!(s4.to_string(), $string);
             assert_eq!(s4.bytes(), $string.as_bytes());
             assert_eq!(format!("{s4:?}"), format!("{:?}", $string));
 
