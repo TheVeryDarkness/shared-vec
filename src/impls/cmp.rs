@@ -38,7 +38,7 @@ impl<C1: Counter<usize>, C2: Counter<usize>> PartialOrd<String<C2>> for String<C
 }
 impl<C: Counter<usize>> Ord for String<C> {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.as_str().cmp(&other.as_str())
+        self.as_str().cmp(other.as_str())
     }
 }
 
