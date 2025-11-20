@@ -66,7 +66,7 @@ impl_cell!(usize);
 
 macro_rules! impl_atomic {
     ($ty:ty, $equiv:ty) => {
-        unsafe impl Counter<usize> for $ty {
+        unsafe impl Counter<$equiv> for $ty {
             unsafe fn increment(&self) {
                 self.fetch_add(1, Ordering::Relaxed);
             }
