@@ -2,11 +2,9 @@
 //!
 //! See [alloc::sync::Arc].
 
-use core::{
-    cell::Cell,
-    sync::atomic,
-    sync::atomic::{AtomicU16, AtomicU32, AtomicU64, AtomicU8, AtomicUsize, Ordering},
-};
+use core::cell::Cell;
+use core::sync::atomic;
+use core::sync::atomic::{AtomicU16, AtomicU32, AtomicU64, AtomicU8, AtomicUsize, Ordering};
 
 /// Counter trait for uniformed reference counting.
 ///

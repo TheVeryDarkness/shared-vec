@@ -1,6 +1,7 @@
 use crate::{Counter, String};
 use alloc::boxed::Box;
-use core::{error::Error, fmt};
+use core::error::Error;
+use core::fmt;
 
 struct StringError<C: Counter<usize>>(String<C>);
 

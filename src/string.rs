@@ -1,10 +1,9 @@
-use crate::{counter::Counter, Vec};
+use crate::counter::Counter;
+use crate::Vec;
 use alloc::boxed::Box;
-use core::{
-    fmt,
-    ops::{Deref, RangeBounds},
-    str::Utf8Error,
-};
+use core::fmt;
+use core::ops::{Deref, RangeBounds};
+use core::str::Utf8Error;
 
 /// An immutable reference-counted string type.
 ///

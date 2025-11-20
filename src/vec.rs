@@ -1,8 +1,10 @@
-use crate::{counter::Counter, inner::Inner};
+use crate::counter::Counter;
+use crate::inner::Inner;
 use alloc::boxed::Box;
-use core::ops::RangeBounds;
+use core::marker::PhantomData;
+use core::ops::{Deref, RangeBounds};
+use core::ptr::NonNull;
 use core::{fmt, ptr};
-use core::{marker::PhantomData, ops::Deref, ptr::NonNull};
 
 /// An immutable reference-counted vector type.
 ///
@@ -48,6 +50,7 @@ impl<C: Counter<usize>, T> Vec<C, T> {
         };
         unsafe { Self::from_inner(x) }
     }
+
     /// Create a new empty `Vec`.
     #[inline]
     pub fn new() -> Self {

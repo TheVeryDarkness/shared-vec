@@ -1,7 +1,8 @@
 #![cfg(feature = "schemars")]
 
 use crate::{Counter, String, Vec};
-use alloc::{borrow::Cow, format};
+use alloc::borrow::Cow;
+use alloc::format;
 use schemars::{JsonSchema, SchemaGenerator};
 
 impl<C: Counter<usize>, T: JsonSchema> JsonSchema for Vec<C, T> {
