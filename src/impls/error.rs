@@ -1,3 +1,4 @@
+//! See the implementation for [`alloc::string::String`] as [`core::error::Error`] for more details.
 use crate::{Counter, String};
 use alloc::boxed::Box;
 use core::error::Error;

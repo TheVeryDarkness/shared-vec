@@ -63,6 +63,7 @@ impl<C: Counter<usize>, T> Vec<C, T> {
 }
 
 impl<C: Counter<usize>, T> Clone for Vec<C, T> {
+    /// Clones the `Vec`, creating a new reference to the same data.
     #[inline]
     fn clone(&self) -> Self {
         unsafe {

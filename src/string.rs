@@ -64,6 +64,7 @@ impl<C: Counter<usize>> Default for String<C> {
 }
 
 impl<C: Counter<usize>> Clone for String<C> {
+    /// Clones the `String`, creating a new reference to the same data.
     #[inline]
     fn clone(&self) -> Self {
         Self {

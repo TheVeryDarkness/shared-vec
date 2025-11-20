@@ -1,13 +1,16 @@
 //! Tests for schemars implementations
 #![cfg(feature = "schemars")]
 
-use schemars::{json_schema, schema_for};
-use shared_vec::{String, Vec};
-use std::cell::Cell;
+use schemars::{json_schema, schema_for, JsonSchema};
+use shared_vec::{RcString, RcVec};
 
 #[test]
 fn vec() {
-    let s = schema_for!(Vec::<Cell<usize>, u32>);
+    assert_eq!(
+        RcVec::<u32>::inline_schema(),
+        <[u32] as schemars::JsonSchema>::inline_schema()
+    );
+    let s = schema_for!(RcVec<u32>);
     assert_eq!(
         s,
         json_schema!({
@@ -21,11 +24,22 @@ fn vec() {
             }
         })
     );
+    let s_ = schema_for!(std::vec::Vec::<u32>);
+    assert_eq!(s.as_value()["type"], s_.as_value()["type"]);
+    assert_eq!(s.as_value()["items"], s_.as_value()["items"]);
 }
 
 #[test]
 fn string() {
-    let s = schema_for!(String::<Cell<usize>>);
+    assert_eq!(
+        RcString::inline_schema(),
+        <str as schemars::JsonSchema>::inline_schema()
+    );
+    assert_eq!(
+        RcString::inline_schema(),
+        <std::string::String as schemars::JsonSchema>::inline_schema()
+    );
+    let s = schema_for!(RcString);
     assert_eq!(
         s,
         json_schema!({
@@ -34,4 +48,7 @@ fn string() {
             "title": "String",
         })
     );
+    let s_ = schema_for!(std::string::String);
+    assert_eq!(s.as_value()["type"], s_.as_value()["type"]);
+    assert_eq!(s.as_value()["items"], s_.as_value()["items"]);
 }

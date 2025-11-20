@@ -1,7 +1,7 @@
 //! Basic tests for [`shared_vec`] crate
 
 use shared_vec::{Counter, String, Vec};
-use std::borrow::ToOwned;
+use std::borrow::{Borrow, ToOwned};
 use std::cell::Cell;
 use std::collections::HashSet;
 use std::hash::{DefaultHasher, Hash, Hasher, RandomState};
@@ -63,6 +63,7 @@ fn test_vec<C: Counter<usize>>() {
             assert_eq!(&*v3, slice);
             assert_eq!(v3.as_slice(), &vec[bounds.clone()]);
             assert_eq!(<_ as AsRef<[_]>>::as_ref(&v3), &vec[bounds.clone()]);
+            assert_eq!(<_ as Borrow<[_]>>::borrow(&v3), &vec[bounds.clone()]);
 
             let mut a = DefaultHasher::new();
             v3.hash(&mut a);
@@ -178,6 +179,7 @@ fn test_string<C: Counter<usize>>() {
             let s3 = s.idx(bounds.clone());
             assert_eq!(s3.as_str(), &string[bounds.clone()]);
             assert_eq!(<_ as AsRef<str>>::as_ref(&s3), &string[bounds.clone()]);
+            assert_eq!(<_ as Borrow<str>>::borrow(&s3), &string[bounds.clone()]);
             assert_eq!(<_ as AsRef<[u8]>>::as_ref(&s3), string[bounds].as_bytes());
             assert_eq!(s3.len(), $string.len());
             assert_eq!(s3.is_empty(), $string.is_empty());
@@ -230,6 +232,9 @@ fn test_string<C: Counter<usize>>() {
 
     idx_err!(4..2);
     idx_err!(6..9);
+    idx_err!(7..10);
+    idx_err!(7..);
+    idx_err!(..9);
     idx_err!(..12);
     idx_err!(12..);
     idx_err!((usize::MAX)..);
