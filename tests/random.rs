@@ -4,6 +4,7 @@ use itertools::Itertools;
 use shared_vec::{ArcString, Counter, RcString, String};
 use std::borrow::{Borrow, Cow};
 use std::cell::Cell;
+#[cfg(feature = "std")]
 use std::path::{Path, PathBuf};
 use std::sync::atomic::AtomicUsize;
 
@@ -22,7 +23,9 @@ fn test_string<C: Counter<usize>>() {
     assert!(strings.is_sorted());
 
     for s in strings.iter() {
+        #[cfg(feature = "std")]
         assert_eq!(PathBuf::from(s.as_str()), <_ as AsRef<Path>>::as_ref(s));
+        #[cfg(feature = "std")]
         assert_eq!(Path::new(s.as_str()), <_ as AsRef<Path>>::as_ref(s));
 
         assert_eq!(s.as_bytes(), <_ as AsRef<[u8]>>::as_ref(s));
