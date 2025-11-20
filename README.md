@@ -43,3 +43,12 @@ let str_slice = string.idx(7..12);
 println!("{:?}", str_slice);
 assert_eq!(str_slice.as_str(), "world");
 ```
+
+## Related Projects
+
+|                    Crate Name                    | Description | `deref` or `as_str` | Offset Representation | Allow Weak References |
+| :----------------------------------------------: | :---------: | :-----------------: | :-------------------: | :-------------------: |
+|   [`substr`](https://crates.io/crates/substr)    |             |          N          |        `usize`        |           N           |
+|    [`genrc`](https://crates.io/crates/genrc)     |             |          Y          |  `std::ptr::NonNull`  |           Y           |
+| [`shared-string`](https://docs.rs/shared-string) |             |          Y          |        `usize`        |           N           |
+|    [`shared-vec`](https://docs.rs/shared-vec)    |             |          Y          |  `std::ptr::NonNull`  |           N           |
