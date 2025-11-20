@@ -9,6 +9,7 @@ mod counter;
 mod inner;
 mod string;
 mod vec;
+mod impls;
 
 pub use counter::Counter;
 pub use string::String;

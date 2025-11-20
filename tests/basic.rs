@@ -57,7 +57,7 @@ fn test_vec<C: Counter<usize>>() {
     macro_rules! idx_ok {
         ($bounds:expr, $slice:expr) => {
             let bounds = $bounds;
-            let slice = $slice;
+            let slice: &[i32] = $slice;
             let v3 = v.get(bounds.clone()).unwrap();
             assert_eq!(v3.len(), slice.len());
             assert_eq!(&*v3, slice);
