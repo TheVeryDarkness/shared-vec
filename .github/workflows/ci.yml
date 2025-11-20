@@ -16,10 +16,16 @@ jobs:
         include:
           - rust: 1.87.0
             components: rustfmt, clippy
+            features:
+          - rust: 1.87.0
+            components: rustfmt, clippy
+            features: --all-features
           - rust: stable # Run code coverage only on stable
             components: rustfmt, clippy, llvm-tools-preview
+            features: --all-features
           - rust: nightly # Run MIRI tests only on nightly
             components: rustfmt, clippy, miri, rust-src
+            features: --all-features
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust Toolchain
@@ -33,14 +39,14 @@ jobs:
       - name: cargo fmt
         run: cargo fmt --all -- --check
       - name: cargo clippy
-        run: cargo clippy --workspace --all-targets
+        run: cargo clippy --workspace ${{ matrix.features }} --all-targets
       - name: cargo test
-        run: cargo test --workspace
+        run: cargo test --workspace ${{ matrix.features }}
       - name: cargo test
-        run: cargo miri test --workspace
+        run: cargo miri test --workspace ${{ matrix.features }}
         if: matrix.rust == 'nightly'
       - name: Generate Code Coverage
-        run: cargo llvm-cov --workspace --lcov --output-path lcov.info
+        run: cargo llvm-cov --workspace ${{ matrix.features }} --lcov --output-path lcov.info
         if: matrix.rust == 'stable'
       - name: Upload Results to Codecov
         uses: codecov/codecov-action@v3
