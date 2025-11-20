@@ -3,13 +3,16 @@
 
 extern crate alloc;
 
+#[cfg(feature = "std")]
+extern crate std;
+
 use core::{cell::Cell, sync::atomic};
 
 mod counter;
+mod impls;
 mod inner;
 mod string;
 mod vec;
-mod impls;
 
 pub use counter::Counter;
 pub use string::String;

@@ -4,7 +4,7 @@ use shared_vec::{Counter, String, Vec};
 use std::borrow::ToOwned;
 use std::cell::Cell;
 use std::collections::HashSet;
-use std::hash::RandomState;
+use std::hash::{DefaultHasher, Hash, Hasher, RandomState};
 use std::ops::Bound;
 use std::sync::atomic::AtomicUsize;
 
@@ -64,6 +64,12 @@ fn test_vec<C: Counter<usize>>() {
             assert_eq!(v3.as_slice(), &vec[bounds.clone()]);
             assert_eq!(<_ as AsRef<[_]>>::as_ref(&v3), &vec[bounds.clone()]);
 
+            let mut a = DefaultHasher::new();
+            v3.hash(&mut a);
+            let mut b = DefaultHasher::new();
+            slice.hash(&mut b);
+            assert_eq!(a.finish(), b.finish());
+
             assert!(v.is_valid_range(bounds.clone()));
             assert_eq!(v3, unsafe { v.get_unchecked(bounds) });
         };
@@ -98,7 +104,8 @@ fn test_vec<C: Counter<usize>>() {
 
     let integers = integers
         .iter()
-        .map(|s| Vec::<C, i32>::from_boxed_slice(s.to_vec().into_boxed_slice()))
+        .copied()
+        .map(|s| Vec::<C, i32>::from_boxed_slice(s.into()))
         .collect::<std::vec::Vec<Vec<C, i32>>>();
     for s in integers.iter() {
         assert!(integers.binary_search(s).is_ok());
@@ -181,6 +188,12 @@ fn test_string<C: Counter<usize>>() {
             assert_eq!(format!("{s3:?}"), format!("{:?}", $string));
 
             assert!(s.is_valid_range($bounds));
+
+            let mut a = DefaultHasher::new();
+            s3.hash(&mut a);
+            let mut b = DefaultHasher::new();
+            $string.hash(&mut b);
+            assert_eq!(a.finish(), b.finish());
 
             let s4 = unsafe { s.get_unchecked($bounds) };
             assert_eq!(s4.len(), $string.len());

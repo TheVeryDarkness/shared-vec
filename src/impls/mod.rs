@@ -1,2 +1,9 @@
+mod as_ref;
+mod borrow;
+mod cmp;
+mod convert;
+mod error;
+mod hash;
 mod schemars;
 mod serde;
+mod std;

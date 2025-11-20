@@ -9,8 +9,9 @@ license = "MIT OR Apache-2.0"
 categories = ["data-structures", "no-std"]
 
 [features]
-serde = ["dep:serde"]
 schemars = ["dep:schemars"]
+serde = ["dep:serde"]
+std = []
 
 [dependencies]
 serde = { version = "1.0.228", optional = true, default-features = false, features = [

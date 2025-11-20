@@ -2,7 +2,6 @@ use crate::{counter::Counter, Vec};
 use alloc::boxed::Box;
 use core::{
     fmt,
-    hash::Hash,
     ops::{Deref, RangeBounds},
     str::Utf8Error,
 };
@@ -185,49 +184,6 @@ impl<C: Counter<usize>> String<C> {
         let (start, len) = self.convert_range_unchecked(range);
         let vec = self.vec.slice(start, len);
         Self { vec }
-    }
-}
-
-impl<C: Counter<usize>> From<Box<str>> for String<C> {
-    #[inline]
-    fn from(s: Box<str>) -> Self {
-        Self::from_boxed_str(s)
-    }
-}
-
-impl<C: Counter<usize>> PartialEq for String<C> {
-    fn eq(&self, other: &Self) -> bool {
-        self.vec == other.vec
-    }
-}
-impl<C: Counter<usize>> Eq for String<C> {}
-impl<C: Counter<usize>> PartialOrd for String<C> {
-    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-impl<C: Counter<usize>> Ord for String<C> {
-    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
-        self.vec.cmp(&other.vec)
-    }
-}
-impl<C: Counter<usize>> Hash for String<C> {
-    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
-        self.vec.hash(state);
-    }
-}
-
-impl<C: Counter<usize>> AsRef<str> for String<C> {
-    #[inline]
-    fn as_ref(&self) -> &str {
-        self
-    }
-}
-
-impl<C: Counter<usize>> AsRef<[u8]> for String<C> {
-    #[inline]
-    fn as_ref(&self) -> &[u8] {
-        &self.vec
     }
 }
 
