@@ -1,6 +1,6 @@
 # `shared-vec`
 
-[![codecov](https://codecov.io/gh/TheVeryDarkness/pest-typed/graph/badge.svg?token=A4L7TXP5DF)](https://codecov.io/gh/TheVeryDarkness/pest-typed)
+[![codecov](https://codecov.io/gh/TheVeryDarkness/shared-vec/graph/badge.svg?token=K34GKGGCCA)](https://codecov.io/gh/TheVeryDarkness/shared-vec)
 
 `shared-vec` is a Rust crate that provides immutable reference-counted vector and string types allowing sharing data (or even a part of it) without lifetime-bound references.
 
