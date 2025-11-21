@@ -48,13 +48,11 @@ jobs:
         run: cargo clippy --all-features --all-targets
       # Run Tests
       - run: cargo test
+      - run: cargo test --features miette
       - run: cargo test --features schemars
       - run: cargo test --features serde
-      - run: cargo test --features miette
-      - run: cargo test --features schemars,serde
-      - run: cargo test --features schemars,miette
-      - run: cargo test --features serde,miette
-      - run: cargo test --features schemars,serde,miette
+      - run: cargo test --features std
+      - run: cargo test --all-features
       # MIRI Tests
       - run: cargo miri test --all-features
         if: matrix.rust == 'nightly'
