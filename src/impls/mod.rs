@@ -4,6 +4,7 @@ mod cmp;
 mod convert;
 mod error;
 mod hash;
+mod miette;
 mod schemars;
 mod serde;
 mod std;
