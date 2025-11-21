@@ -10,24 +10,29 @@ name: Build, Lint and Test
 jobs:
   check:
     name: Check and Test Coverage
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
           - rust: 1.87.0
             components: rustfmt, clippy
-            features:
-          - rust: 1.87.0
-            components: rustfmt, clippy
-            features: --all-features
+            os: ubuntu-latest
           - rust: stable # Run code coverage only on stable
             components: rustfmt, clippy, llvm-tools-preview
-            features: --all-features
+            os: ubuntu-latest
           - rust: nightly # Run MIRI tests only on nightly
             components: rustfmt, clippy, miri, rust-src
-            features: --all-features
+            os: ubuntu-latest
+          - rust: nightly # Run MIRI tests only on nightly
+            components: rustfmt, clippy, miri, rust-src
+            os: macos-latest
+          - rust: nightly # Run MIRI tests only on nightly
+            components: rustfmt, clippy, miri, rust-src
+            os: windows-latest
     steps:
+      # Checkout Code
       - uses: actions/checkout@v4
+      # Setup Rust and Tools
       - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
@@ -36,17 +41,26 @@ jobs:
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
         if: matrix.rust == 'stable'
+      # Linting
       - name: cargo fmt
         run: cargo fmt --all -- --check
       - name: cargo clippy
-        run: cargo clippy --workspace ${{ matrix.features }} --all-targets
-      - name: cargo test
-        run: cargo test --workspace ${{ matrix.features }}
-      - name: cargo test
-        run: cargo miri test --workspace ${{ matrix.features }}
+        run: cargo clippy --all-features --all-targets
+      # Run Tests
+      - run: cargo test
+      - run: cargo test --features schemars
+      - run: cargo test --features serde
+      - run: cargo test --features miette
+      - run: cargo test --features schemars,serde
+      - run: cargo test --features schemars,miette
+      - run: cargo test --features serde,miette
+      - run: cargo test --features schemars,serde,miette
+      # MIRI Tests
+      - run: cargo miri test --all-features
         if: matrix.rust == 'nightly'
+      # Code Coverage
       - name: Generate Code Coverage
-        run: cargo llvm-cov --workspace ${{ matrix.features }} --lcov --output-path lcov.info
+        run: cargo llvm-cov --all-features --lcov --output-path lcov.info
         if: matrix.rust == 'stable'
       - name: Upload Results to Codecov
         uses: codecov/codecov-action@v3
