@@ -1,5 +1,5 @@
 [alias]
-cov = "llvm-cov --html --open --hide-instantiations --show-missing-lines"
+cov = "llvm-cov --html --all-features --open --hide-instantiations --show-missing-lines"
 
 [env]
 RUST_BACKTRACE = "1"
