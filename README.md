@@ -48,10 +48,11 @@ assert_eq!(str_slice.as_str(), "world");
 
 ## Related Projects
 
-|                    Crate Name                    |                          Description                          | Memory Management Approach | `deref` or `as_str` |    Offset Representation     | Allow Weak References |
-| :----------------------------------------------: | :-----------------------------------------------------------: | :------------------------: | :-----------------: | :--------------------------: | :-------------------: |
-|   [`substr`](https://crates.io/crates/substr)    |                     Substrings as ranges                      |       no allocation        |          N          |           `usize`            |                       |
-|    [`genrc`](https://crates.io/crates/genrc)     |     Ref-counted pointers allowing to reference subobjects     |     reference counting     |          Y          |     `std::ptr::NonNull`      |           Y           |
-| [`shared-string`](https://docs.rs/shared-string) | Shared strings backed by `Rc<Box<[u8]>>` and `Arc<Box<[u8]>>` |     reference counting     |          Y          |           `usize`            |           N           |
-|    [`shared-vec`](https://docs.rs/shared-vec)    |   Ref-counted vectors and strings simulating `Rc` and `Arc`   |     reference counting     |          Y          |     `std::ptr::NonNull`      |           N           |
-|                      `&str`                      |                                                               |          lifetime          |                     | data part of the fat pointer |                       |
+|                       Crate Name                        |                          Description                          | Memory Management Approach | `deref` or `as_str` |    Offset Representation     | Allow Weak References |
+| :-----------------------------------------------------: | :-----------------------------------------------------------: | :------------------------: | :-----------------: | :--------------------------: | :-------------------: |
+|       [`substr`](https://crates.io/crates/substr)       |                     Substrings as ranges                      |       no allocation        |          N          |           `usize`            |                       |
+|        [`genrc`](https://crates.io/crates/genrc)        |     Ref-counted pointers allowing to reference subobjects     |     reference counting     |          Y          |    `std::ptr::NonNull<T>`    |           Y           |
+|    [`shared-string`](https://docs.rs/shared-string)     | Shared strings backed by `Rc<Box<[u8]>>` and `Arc<Box<[u8]>>` |     reference counting     |          Y          |           `usize`            |           N           |
+| [`shared_slice`](https://crates.io/crates/shared_slice) |        Shared slices backed by `Rc<()>` and `Arc<()>`         |     reference counting     |          Y          |           `usize`            |           N           |
+|       [`shared-vec`](https://docs.rs/shared-vec)        |   Ref-counted vectors and strings simulating `Rc` and `Arc`   |     reference counting     |                     |         `*const [T]`         |           Y           |
+|                         `&str`                          |                                                               |          lifetime          |                     | data part of the fat pointer |                       |
