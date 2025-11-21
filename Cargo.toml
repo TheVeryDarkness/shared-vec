@@ -9,6 +9,7 @@ license = "MIT OR Apache-2.0"
 categories = ["data-structures", "no-std"]
 
 [features]
+miette = ["dep:miette"]
 schemars = ["dep:schemars"]
 serde = ["dep:serde"]
 std = []
