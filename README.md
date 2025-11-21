@@ -48,9 +48,10 @@ assert_eq!(str_slice.as_str(), "world");
 
 ## Related Projects
 
-|                    Crate Name                    | Description | `deref` or `as_str` | Offset Representation | Allow Weak References |
-| :----------------------------------------------: | :---------: | :-----------------: | :-------------------: | :-------------------: |
-|   [`substr`](https://crates.io/crates/substr)    |             |          N          |        `usize`        |           N           |
-|    [`genrc`](https://crates.io/crates/genrc)     |             |          Y          |  `std::ptr::NonNull`  |           Y           |
-| [`shared-string`](https://docs.rs/shared-string) |             |          Y          |        `usize`        |           N           |
-|    [`shared-vec`](https://docs.rs/shared-vec)    |             |          Y          |  `std::ptr::NonNull`  |           N           |
+|                    Crate Name                    |                          Description                          | Lifetime | `deref` or `as_str` |    Offset Representation     | Allow Weak References |
+| :----------------------------------------------: | :-----------------------------------------------------------: | :------: | :-----------------: | :--------------------------: | :-------------------: |
+|   [`substr`](https://crates.io/crates/substr)    |                     Substrings as ranges                      |    N     |          N          |           `usize`            |           N           |
+|    [`genrc`](https://crates.io/crates/genrc)     |     Ref-counted pointers allowing to reference subobjects     |    N     |          Y          |     `std::ptr::NonNull`      |           Y           |
+| [`shared-string`](https://docs.rs/shared-string) | Shared strings backed by `Rc<Box<[u8]>>` and `Arc<Box<[u8]>>` |    N     |          Y          |           `usize`            |           N           |
+|    [`shared-vec`](https://docs.rs/shared-vec)    |   Ref-counted vectors and strings simulating `Rc` and `Arc`   |    N     |          Y          |     `std::ptr::NonNull`      |           N           |
+|                      `&str`                      |                                                               |    Y     |                     | data part of the fat pointer |                       |
